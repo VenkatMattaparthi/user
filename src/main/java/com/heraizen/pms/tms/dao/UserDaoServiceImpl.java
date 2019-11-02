@@ -24,26 +24,28 @@ public class UserDaoServiceImpl implements UserDaoService {
 
 	@Override
 	public User updateUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
+		user=userRepo.save(user);
+		return user;
 	}
 
 	@Override
 	public Optional<User> userById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		return userRepo.findById(id);
 	}
 
 	@Override
 	public boolean deleteUser(String id) {
-		// TODO Auto-generated method stub
+		 Optional<User> user = userRepo.findById(id);
+		 if (user.isPresent()) {
+				userRepo.delete(user.get());
+				return true;
+			}
 		return false;
 	}
 
 	@Override
 	public List<User> allUsers() {
-		// TODO Auto-generated method stub
-		return null;
+		return userRepo.findAll();
 	}
 
 	@Override

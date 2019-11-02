@@ -1,5 +1,6 @@
 package com.heraizen.pms.tms.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -38,27 +39,47 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDTO updateUser(UserDTO user) {
-		// TODO Auto-generated method stub
-		return null;
+	public UserDTO updateUser(UserDTO userDto) {
+		Assert.notNull(userDto, "User shouldn't be null");
+		Assert.notNull(userDto.getId(), "User id shouldn't null");
+		User user = modelMapper.map(userDto, User.class);
+	     user = userDaoService.updateUser(user);
+	     userDto = modelMapper.map(user, UserDTO.class);
+		LOG.info("User with id : {} is updated successfully", userDto.getId());
+		return userDto;
 	}
 
 	@Override
 	public Optional<UserDTO> userById(String id) {
-		// TODO Auto-generated method stub
+		Optional<User> user = userDaoService.userById(id);
+		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 		return null;
 	}
 
 	@Override
 	public boolean deleteUser(String id) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean isdel = userDaoService.deleteUser(id);
+		if(isdel) {
+			LOG.info("User with id {} has been deleted"+id);
+			return true;
+		}
+		else {
+			LOG.info("User coudn't be delete");
+			return false;
+		}
+		
 	}
 
 	@Override
 	public List<UserDTO> allUsers() {
-		// TODO Auto-generated method stub
-		return null;
+		List<User> users = userDaoService.allUsers();
+		LOG.info("List of user size{}:"+users.size());
+		List<UserDTO> dtos=new ArrayList<>();
+		for (User user : users) {
+			UserDTO userdto = modelMapper.map(user, UserDTO.class);
+			dtos.add(userdto);
+		}
+		return dtos;
 	}
 
 	@Override
